@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!-- 配置注解驱动，替代推荐使用的映射器以及适配器，json转换器 -->
+    <mvc:annotation-driven />
+
+    <!-- 开启注解扫描 -->
+    <context:component-scan base-package="com.bwie.controller" />
+
+    <!-- 配置解决静态资源拦截 -->
+    <mvc:default-servlet-handler />
+
+    <!-- 配置视图解析器 -->
+    <!-- Example: prefix="/WEB-INF/jsp/", suffix=".jsp", viewname="test" -> "/WEB-INF/jsp/test.jsp"  -->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/views/"></property>
+        <property name="suffix" value=".html"></property>
+    </bean>
+
+    <!-- 配置自定义的登录拦截器 -->
+    <!-- <mvc:interceptors>
+         <mvc:interceptor>
+             &lt;!&ndash; 配置对哪些请求做拦截 /** 所有的请求 &ndash;&gt;
+             <mvc:mapping path="/**"/>
+             &lt;!&ndash; 配置自定义拦截器的类的路径 &ndash;&gt;
+             <bean class="com.bwie.interceptoprs.LoginInterceptor"/>
+         </mvc:interceptor>
+     </mvc:interceptors>-->
+
+    <!-- 配置文件上传解析器 -->
+    <!-- <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+         &lt;!&ndash; 配置每次最大上传文件的大小  5M &ndash;&gt;
+         <property  name="maxUploadSize" value="5242880"  />
+         &lt;!&ndash; 配置编码 &ndash;&gt;
+         <property name="defaultEncoding" value="utf-8" />
+     </bean>-->
+
+</beans>

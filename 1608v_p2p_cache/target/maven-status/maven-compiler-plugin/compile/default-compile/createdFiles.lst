@@ -1,0 +1,2 @@
+com\bwie\cache\BaseCacheService.class
+com\bwie\cache\RedisCacheService.class

@@ -172,7 +172,7 @@ public class UserController extends BaseController {
 
     }
 
-    /*@RequestMapping("userSecure")
+    @RequestMapping("userSecure")
     public Response userSecure(HttpServletRequest request){
         String token = GetHttpResponseHeader.getHeadersInfo(request);
         Map<String, Object> hmap = redisCache.getHmap(token);
@@ -187,7 +187,6 @@ public class UserController extends BaseController {
         objects.add(stringObjectHashMap);
         return Response.build().setStatus(FrontStatusConstants.SUCCESS).setData(objects);
     }
-*/
 
     @RequestMapping("logout")
     public Response logout(HttpServletRequest request){

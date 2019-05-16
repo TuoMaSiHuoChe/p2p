@@ -51,5 +51,20 @@ public class UserServiceImpl implements UserService {
         return userDao.findById(userid);
     }
 
+    @Override
+    public void updatePhoneStatus(String phone, int id) {
+        userDao.updatePhoneStatus(phone,Integer.parseInt(id+""));
+    }
+
+    @Override
+    public void updateRealName(String realName, String identity, int id) {
+        userDao.updateRealName(realName,identity,Integer.parseInt(id+""));
+    }
+
+    @Override
+    public UserModel findByEmail(String email) {
+        return userDao.findByEmail(email);
+    }
+
 
 }

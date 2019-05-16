@@ -20,4 +20,10 @@ public interface UserService {
     UserModel login(String username, String pwd);
 
     UserModel findById(int userid);
+
+    void updatePhoneStatus(String phone, int id);
+
+    void updateRealName(String realName, String identity, int id);
+
+    UserModel findByEmail(String email);
 }

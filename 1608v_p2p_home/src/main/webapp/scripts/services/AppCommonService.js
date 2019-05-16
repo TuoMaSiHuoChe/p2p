@@ -122,7 +122,11 @@ angular.module('AppCommonService', ['ngCookies','ui.router'])
                 return $http.post(option.url.api_user + 'validatePhone', $str, option.header);
                 ///itcast_p2p_action/user/validatePhone
             },
-            
+            authPhone:function ($str){
+                return $http.post(option.url.api_user + 'validateAuthPhone', $str, option.header);
+                ///itcast_p2p_action/user/validatePhone
+            },
+
            //注册校验验证码的正确性
             yzAuthCaptcha:function($str){
                 return $http.post(option.url.api_user + 'codeValidate',$str,option.header);
@@ -169,7 +173,7 @@ angular.module('AppCommonService', ['ngCookies','ui.router'])
             
             //邮箱绑定认证
             authEmail:function($str){
-                return $http.post(option.url.api_emailAuth+'auth', $str, option.header);
+                return $http.post(option.url.api_emailAuth+'auth', $str);
                 // /itcast_p2p_action/emailAuth/auth
             },
             //修改邮箱

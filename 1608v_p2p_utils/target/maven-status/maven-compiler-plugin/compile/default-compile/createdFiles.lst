@@ -1,9 +1,13 @@
 com\bwie\until\RegValidationUtil.class
 com\bwie\until\TokenUtil.class
+com\bwie\until\EmailUtils.class
+com\bwie\until\JavaMailSenderImpl.class
 com\bwie\until\MD5Util.class
 com\bwie\until\Response.class
 com\bwie\until\ProductStyle.class
 com\bwie\until\ConfigurableConstants.class
+com\bwie\until\AliyunUtils.class
+com\bwie\until\Calculator.class
 com\bwie\until\CommomUtil.class
 com\bwie\until\JsonMapper.class
 com\bwie\until\SpringContext.class

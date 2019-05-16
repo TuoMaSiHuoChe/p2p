@@ -63,6 +63,24 @@ public class UserController extends BaseController {
         }
     }
 
+    @RequestMapping("validateAuthPhone")
+    public Response validateAuthPhone(@RequestParam("phone") String phone, HttpServletRequest request) {
+        String token = GetHttpResponseHeader.getHeadersInfo(request);
+        if (!StringUtils.isEmpty(token)) {
+            Map<String, Object> hmap = redisCache.getHmap(token);
+            if (hmap != null || hmap.size() == 0) {
+                return Response.build().setStatus(FrontStatusConstants.SUCCESS);
+            }
+        }
+        UserModel userModel = userService.validatePhone(phone);
+        if (userModel == null) {
+            return Response.build().setStatus(FrontStatusConstants.SUCCESS);
+        } else {
+            return Response.build().setStatus(FrontStatusConstants.ALREADY_EXIST_OF_OPTION_NAME);
+        }
+
+    }
+
 
     @RequestMapping("codeValidate")
     public Response codeValidate(@RequestParam("signUuid") String signUuid, @RequestParam("signCode") String signCode) {
@@ -173,39 +191,89 @@ public class UserController extends BaseController {
     }
 
     @RequestMapping("userSecure")
-    public Response userSecure(HttpServletRequest request){
+    public Response userSecure(HttpServletRequest request) {
         String token = GetHttpResponseHeader.getHeadersInfo(request);
         Map<String, Object> hmap = redisCache.getHmap(token);
-        int userid= (int) hmap.get("id");
-        UserModel userModel=userService.findById(userid);
-       List<Map<String,Object>> objects = new ArrayList<>();
+        int userid = (int) hmap.get("id");
+        UserModel userModel = userService.findById(userid);
+        List<Map<String, Object>> objects = new ArrayList<>();
         Map<String, Object> stringObjectHashMap = new HashMap<>(16);
-        stringObjectHashMap.put("phoneStatus",userModel.getPhoneStatus());
-        stringObjectHashMap.put("emailStatus",userModel.getEmailStatus());
-        stringObjectHashMap.put("payPwdStatus",userModel.getPayPwdStatus());
-        stringObjectHashMap.put("realNameStatus",userModel.getRealNameStatus());
+        stringObjectHashMap.put("phoneStatus", userModel.getPhoneStatus());
+        stringObjectHashMap.put("emailStatus", userModel.getEmailStatus());
+        stringObjectHashMap.put("payPwdStatus", userModel.getPayPwdStatus());
+        stringObjectHashMap.put("realNameStatus", userModel.getRealNameStatus());
         objects.add(stringObjectHashMap);
         return Response.build().setStatus(FrontStatusConstants.SUCCESS).setData(objects);
     }
 
 
-
     @RequestMapping("logout")
-    public Response logout(HttpServletRequest request){
+    public Response logout(HttpServletRequest request) {
         String token = request.getHeader("token");
-        if(StringUtils.isEmpty(token)){
+        if (StringUtils.isEmpty(token)) {
             return Response.build().setStatus(FrontStatusConstants.NULL_TOKEN);
         }
         Map<String, Object> hmap = redisCache.getHmap(token);
-        if(hmap==null){
+        if (hmap == null) {
             return Response.build().setStatus(FrontStatusConstants.NULL_TOKEN);
         }
         redisCache.del(token);
         return Response.build().setStatus(FrontStatusConstants.SUCCESS);
     }
 
+
+    /**
+     * 分析用户认证完成度
+     */
+    @RequestMapping("userSecureDetailed")
+    public Response userSecureDetailed(HttpServletRequest request) {
+        String token = GetHttpResponseHeader.getHeadersInfo(request);
+        Map<String, Object> hmap = redisCache.getHmap(token);
+        int userid = (int) hmap.get("id");
+        UserModel userModel = userService.findById(userid);
+        List<Map<String, Object>> objects = new ArrayList<>();
+        Map<String, Object> stringObjectHashMap = new HashMap<>(16);
+        stringObjectHashMap.put("phoneStatus", userModel.getPhoneStatus());
+        stringObjectHashMap.put("emailStatus", userModel.getEmailStatus());
+        stringObjectHashMap.put("payPwdStatus", userModel.getPayPwdStatus());
+        stringObjectHashMap.put("realNameStatus", userModel.getRealNameStatus());
+        stringObjectHashMap.put("username", userModel.getUsername());
+        stringObjectHashMap.put("phone", userModel.getPhone());
+        objects.add(stringObjectHashMap);
+        return Response.build().setStatus(FrontStatusConstants.SUCCESS).setData(objects);
+
+    }
+
+    @RequestMapping("addPhone")
+    public Response addPhone(@RequestParam("phoneCode") String phoneCode, @RequestParam("phone") String phone, HttpServletRequest request) {
+        String token = GetHttpResponseHeader.getHeadersInfo(request);
+        if (org.apache.commons.lang.StringUtils.isEmpty(token)) {
+            return Response.build().setStatus(FrontStatusConstants.NULL_TOKEN);
+        }
+        Map<String, Object> hmap = redisCache.getHmap(token);
+        if (hmap == null || hmap.size() == 0) {
+            // 用户未登录
+            return Response.build().setStatus(FrontStatusConstants.NOT_LOGGED_IN);
+        }
+        // 2.判断验证码是否正确
+        String _phoneCode = redisCache.get(phone);
+        if (!phoneCode.equals(_phoneCode)) {
+            // 说明不正确
+            return Response.build().setStatus(FrontStatusConstants.INPUT_ERROR_OF_VALIDATE_CARD);
+        }
+        UserModel user = userService.findById((int) (hmap.get("id")));
+        if (user.getPhoneStatus() == 1) {
+            return Response.build().setStatus(FrontStatusConstants.MOBILE_ALREADY_REGISTER);
+        }
+        userService.updatePhoneStatus(phone, (int) (hmap.get("id")));
+        return Response.build().setStatus(FrontStatusConstants.SUCCESS);
+    }
+
+
+
     /**
      * 生成用户令牌  并把令牌和用户信息存入缓存
+     *
      * @param userName
      * @return
      */
@@ -245,5 +313,5 @@ public class UserController extends BaseController {
             return Response.build().setStatus("-9999").toJSON();
         }
     }
-/*    eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLmm7nkuIDluIY2OTI0MjQ0OTkwNTQ5NSJ9.ige6Wx0rurVadX7hbkovzq62tF9X76i2c3Kr_OdC6Fo*/
+    /*    eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLmm7nkuIDluIY2OTI0MjQ0OTkwNTQ5NSJ9.ige6Wx0rurVadX7hbkovzq62tF9X76i2c3Kr_OdC6Fo*/
 }

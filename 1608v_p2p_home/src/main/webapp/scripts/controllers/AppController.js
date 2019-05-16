@@ -920,7 +920,7 @@ angular
 							var data = {
 								phone : phoneunm
 							};
-							PostService.checkPhone(objToStr(data)).success(
+							PostService.authPhone(objToStr(data)).success(
 									function(res) {
 										if (res.status == 1) {
 											$scope.phoneMsg = '该手机号可用!';
@@ -1072,13 +1072,13 @@ angular
 							return false;
 						} else {
 							var data = {
-								'userId' : AuthService.getCookie('uid'),
+								'id' : AuthService.getCookie('uid'),
 								'username' : AuthService.getCookie('user'),
 								'email' : $scope.emailAddress
 							};
 
 							PostService
-									.authEmail(objToStr(data))
+									.authEmail(data)
 									.success(
 											function(res) {
 												if (res.status == 1) {

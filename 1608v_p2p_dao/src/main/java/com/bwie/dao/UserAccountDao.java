@@ -13,5 +13,5 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 public interface UserAccountDao extends JpaRepository<UserAccountModel,Integer>,JpaSpecificationExecutor<UserAccountModel> {
 
 
-	
+    UserAccountModel findByUserId(Integer id);
 }

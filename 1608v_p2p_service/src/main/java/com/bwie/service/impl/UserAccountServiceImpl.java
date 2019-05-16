@@ -24,4 +24,9 @@ public class UserAccountServiceImpl implements UserAccountService {
         userAccountModel.setUserId(userId);
         userAccountDao.save(userAccountModel);
     }
+
+    @Override
+    public UserAccountModel findById(int userid) {
+        return userAccountDao.findByUserId(Integer.parseInt(userid+""));
+    }
 }

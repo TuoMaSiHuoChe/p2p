@@ -188,6 +188,8 @@ public class UserController extends BaseController {
         return Response.build().setStatus(FrontStatusConstants.SUCCESS).setData(objects);
     }
 
+
+
     @RequestMapping("logout")
     public Response logout(HttpServletRequest request){
         String token = request.getHeader("token");
